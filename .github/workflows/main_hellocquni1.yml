@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - HelloCQuni1
+name: Build and deploy JAR app to Azure Web App - HelloCQUni1
 
 on:
   push:
@@ -36,18 +36,27 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: java-app
+      
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_49343CA39FD7419A93E9888D71FE5513 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2EF573A47F084341BF3B5F4939CF39D0 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_13AF2EB9D9EB4B038E3F77272694AFE4 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'HelloCQuni1'
+          app-name: 'HelloCQUni1'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F96BCCE658F34CA2B2AE04CBA20447EE }}
           package: '*.jar'
+          
